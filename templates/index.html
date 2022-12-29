@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='templates/styles.css') }}">
+        <title>Kayak race detector</title>
+    </head>
+    <body>
+        <div id="error">
+            {{msg}}
+        </div>
+        <div id="main">
+            <form id="resultsForm" method="post" enctype="multipart/form-data">
+                Race length: <input type="text" id="rlen" name="rlen"><br>
+                Race .csv file: <input type="file" accept=".csv" id="file" name="data-file" ><br>
+                <input type="submit" name="submit_form">
+            </form>
+        </div>
+    </body>
+    
+</html>
