@@ -2,8 +2,11 @@ from flask import Flask, render_template, make_response, request, Response
 import pandas as pd
 from ml.detector.estimator import RaceDetector
 import matplotlib.pyplot as plt
+import matplotlib
 from io import BytesIO
 import base64
+
+matplotlib.use('agg')
 
 FILE_EXTENSIONS = ['csv']
 
@@ -52,12 +55,14 @@ def read_file(fl):
 
 def generate_plot(df, start, end):
     plt.rcParams["figure.figsize"] = (15,4)
+    plt.figure(facecolor='#fafafa')
     plt.plot(df['Time'], df['V(Acc)'])
     plt.plot(df['Time'][start:end], df['V(Acc)'][start:end], color='orange')  
     plt.plot(df['Time'][start], df['V(Acc)'][start], marker='o', color='red')
     plt.plot(df['Time'][end], df['V(Acc)'][end], marker='o', color='red')
     plt.xlabel('Time')
     plt.ylabel('Velocity')
+    plt.tight_layout()
     img = BytesIO()
     plt.savefig(img, format='png')
     plt.close()
@@ -142,4 +147,4 @@ def results():
 
 
 if __name__ == "__main__":
-    app.run('0.0.0.0', '7000')
+    app.run('0.0.0.0', '8080')

@@ -1,0 +1,232 @@
+html,
+body {
+    background-color: #fafafa;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+}
+
+header {
+    border-bottom: 2px solid #6c6c6c;
+    padding: 1rem;
+}
+
+header a {
+    text-decoration: none;
+    color: #fba537;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.headerFilename {
+    color: black;
+    font-weight: normal;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input[type='text'] {
+    height: 1rem;
+    padding: 0.75rem;
+    border-radius: 20px;
+    border: 1px solid #c8c8c8;
+}
+
+#error {
+    background-color: #f7d4d4;
+    color: #60111f;
+    padding: 1rem;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+#main {
+    padding: 2rem 5rem;
+    margin: 2rem;
+    border: 2px dashed #c8c8c8;
+    border-radius: 25px;
+    max-width: min-content;
+}
+
+#main form,
+#main form span,
+.is-js {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#main.active {
+    border: 2px dashed #fba537;
+}
+
+.is-js {
+    display: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: #8a8a8a;
+    margin: 0 0 0.5rem 0;
+}
+
+#fileDisplay {
+    font-size: 0.8rem;
+    color: #666;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    background-color: #ececec;
+    padding: 10px 16px;
+    border-radius: 50px;
+    gap: 10px;
+}
+
+#fileDisplay svg {
+    color: #9b9bfb;
+}
+
+button,
+input[type='submit'],
+.button {
+    background-color: #fba537;
+    color: #fff;
+    border: 1px solid #fba537;
+    border-radius: 25px;
+    width: 100%;
+    padding: 0.5rem;
+    transition: all .2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+button:hover,
+input[type='submit']:hover,
+.button:hover,
+.backlink:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+}
+
+button:hover,
+input[type='submit']:hover,
+.button:hover {
+    box-shadow: 0px 5px 30px -10px #fba537;
+}
+
+/* Configure spinner */
+:root {
+    --background-color: #fba537;
+    --spinner-size: 20;
+    --spinner-width: 5;
+    --spinner-color-1: #f8c27a;
+    --spinner-color-2: #fff;
+}
+
+:root {
+    --spinner-px-size: var(--spinner-size) * 1px;
+    --spinner-px-width: var(--spinner-width) * 1px;
+}
+
+.spinner {
+    background: conic-gradient(var(--spinner-color-1), var(--spinner-color-2));
+    height: calc(var(--spinner-px-size));
+    width: calc(var(--spinner-px-size));
+    border-radius: 50%;
+    display: inline-block;
+    animation: spinner-rotate 1.3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(.79, .14, .15, .86);
+}
+
+.spinner-inner {
+    background: var(--background-color);
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 50%;
+    clip-path: circle(calc(var(--spinner-px-size) / 2 - var(--spinner-px-width) / 2) at center);
+}
+
+.spinner-container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes spinner-rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#canvas {
+    position: absolute;
+    top: 27px;
+    right: 0;
+    background-color: #fafafa;
+    clip-path: polygon(0% 0%, 99% 0%, 100% 99%, 0% 100%);
+}
+
+#results {
+    padding: 0 3rem;
+    display: flex;
+    flex-direction: column;
+}
+
+#results>img {
+    padding-top: 1rem;
+}
+
+.resultDetails {
+    display: flex;
+    justify-content: space-between;
+}
+
+.resultDetails>div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table td {
+    border: 1px solid #d2d2d2;
+    padding: 0.5rem;
+}
+
+table td:first-child {
+    background-color: #e8e8e8;
+    ;
+}
+
+.backlink {
+    text-decoration: none;
+    color: black;
+    background-color: #ececec;
+    padding: 0.5rem;
+    border-radius: 25px;
+    display: flex;
+    gap: 0.5rem;
+    width: 200px;
+    justify-content: center;
+    margin: 1rem;
+    transition: all .2s ease-in-out;
+}

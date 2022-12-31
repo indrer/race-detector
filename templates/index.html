@@ -1,20 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='templates/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <script src="{{ url_for('static', filename='script.js')}}"></script>
         <title>Kayak race detector</title>
     </head>
     <body>
-        <div id="error">
-            {{msg}}
-        </div>
-        <div id="main">
-            <form id="resultsForm" method="post" enctype="multipart/form-data">
-                Race length: <input type="text" id="rlen" name="rlen"><br>
-                Race .csv file: <input type="file" accept=".csv" id="file" name="data-file" ><br>
-                <input type="submit" name="submit_form">
-            </form>
-        </div>
+        <header><a href="#">Kayak Race Detector</a><canvas id="canvas" height="50" width="800"></canvas></header>
+        {% if msg %}
+            <div id="error">
+                {{msg}}
+            </div>
+        {% endif %}
+        <main>
+            <div id="main">
+                <form id="resultsForm" method="post" enctype="multipart/form-data">
+                    <p>Upload race data</p>
+                    <noscript>
+                        Race length: <input type="text" id="rlen" name="rlen"><br>
+                        Race .csv file: <input type="file" accept=".csv" id="file" name="data-file" ><br>
+                        <input type="submit" name="submit_form" value="Detect">
+                    </noscript>
+                    <div class="is-js">
+                        <button id="uploadButton"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"><g clip-path="url(#a)"><path fill="currentColor" d="M17.7375 9.2033C17.1142 6.0408 14.3367 3.6667 11 3.6667c-2.6492 0-4.95 1.5033-6.0958 3.7033C2.145 7.6633 0 10.0008 0 12.8333c0 3.0342 2.4658 5.5 5.5 5.5h11.9167C19.9467 18.3333 22 16.28 22 13.75c0-2.42-1.8792-4.3817-4.2625-4.5467Zm-4.9042 2.7134v3.6666H9.1667v-3.6666h-2.75L11 7.3333l4.5833 4.5834h-2.75Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h22v22H0z"/></clipPath></defs></svg> Select race data file</button>
+                        <p id="fileDisplay" class="hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"><g clip-path="url(#a)"><path fill="currentColor" d="M6 2C4 2 4 3 4 4v14l1 2h12l1-2V7l-5-5H6Zm6 6V3l5 5h-5Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h22v22H0z"/></clipPath></defs></svg>
+                            <span id="filename"></span>
+                        </p>
+                        <p class="hint">(Logan CSV-format required)</p>
+                        Race length: <input type="text" id="rlen" name="rlen" placeholder="Race length in meters" pattern="\d"><br>
+                        <button type="submit" name="submit_form" id="detectButton"><div class="spinner-container">
+                            <span class="spinner"><span class="spinner-inner"></span></span>
+                        </div><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"><g clip-path="url(#a)"><path fill="currentColor" d="M17.4167 2.75H4.5833C3.575 2.75 2.75 3.575 2.75 4.5833v12.8334c0 1.0083.825 1.8333 1.8333 1.8333h12.8334c1.0083 0 1.8333-.825 1.8333-1.8333V4.5833c0-1.0083-.825-1.8333-1.8333-1.8333ZM8.25 15.5833H6.4167V9.1667H8.25v6.4166Zm3.6667 0h-1.8334V6.4167h1.8334v9.1666Zm3.6666 0H13.75v-3.6666h1.8333v3.6666Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h22v22H0z"/></clipPath></defs></svg>Detect</button>
+                        
+                    </div>
+                </form>
+            </div>
+        </main>
     </body>
     
 </html>
