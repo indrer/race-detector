@@ -87,7 +87,13 @@ def predict_race(f, name, racelen):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    global df, start, stop, rlen, filename
     if request.method == 'GET':
+        df = None
+        start = 0
+        stop = 0
+        rlen = 0
+        filename = ''
         return render_template('index.html')
     elif request.method == 'POST':
         # Check if lenght is correct
