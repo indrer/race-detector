@@ -1,18 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='templates/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <script src="{{ url_for('static', filename='script.js')}}"></script>
         <title>Results</title>
     </head>
     <body>
+        <header><a href="#">Kayak Race Detector<span class="headerFilename"> - {{info.name}}</span></a><canvas id="canvas" height="50" width="800"></canvas></header>
+        <a href="/" class="backlink"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"><g clip-path="url(#a)"><path fill="currentColor" d="M18.3333 10.0833H7.1775l5.1242-5.1241L11 3.6667 3.6667 11 11 18.3333l1.2925-1.2925-5.115-5.1241h11.1558v-1.8334Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h22v22H0z"/></clipPath></defs></svg> Upload another race</a>
         <div id="results">
             <img src="data:image/png;base64, {{ info.image }}"><br>
-            Title: {{info.name}}<br>
-            Start: {{info.start}}<br>
-            End: {{info.end}}<br>
+            <div class="resultDetails">
+                <div style="margin-left:3rem">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Title</td>
+                                <td>{{info.name}}</td>
+                            </tr>
+                            <tr>
+                                <td>Start</td>
+                                <td>{{info.start}}</td>
+                            </tr>
+                            <tr>
+                                <td>End</td>
+                                <td>{{info.end}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-right: 2rem">
+                    <a href="/get_vid" class="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"><g clip-path="url(#a)"><path fill="currentColor" d="M17.4167 8.25H13.75v-5.5h-5.5v5.5H4.5833L11 14.6667 17.4167 8.25ZM4.5833 16.5v1.8333h12.8334V16.5H4.5833Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h22v22H0z"/></clipPath></defs></svg> Download .vid file</a>
+                    <a href="/get_csv" class="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"><g clip-path="url(#a)"><path fill="currentColor" d="M17.4167 8.25H13.75v-5.5h-5.5v5.5H4.5833L11 14.6667 17.4167 8.25ZM4.5833 16.5v1.8333h12.8334V16.5H4.5833Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h22v22H0z"/></clipPath></defs></svg> Download race .csv file</a>
+                </div>
 
-            <a href="/get_vid">Download .vid file</a><br>
-            <a href="/get_csv">Download race .csv file</a>
+            </div>
             
         </div>
     </body>
