@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 from io import BytesIO
 import base64
+import traceback
 
 matplotlib.use('agg')
 
@@ -13,6 +14,7 @@ FILE_EXTENSIONS = ['csv']
 app = Flask(__name__)
 detector = RaceDetector()
 df = None
+original = None
 start = 0
 stop = 0
 rlen = 0
@@ -37,8 +39,8 @@ def read_file(fl):
     SEP = ','
     farr =  fl.read().decode('utf-8').split('\n')
     # Get header
-    #header = ['Time', 'Sats', 'Vel', 'V(Acc)', 'Dist', 'StRate', 'Acc(1)', 'Acc(2)', 'Acc(3)', 'Ac3Dif', 'Yaw', 'Pitch', 'Roll', 'GyroRaw1', 'GyroRaw2', 'GyroRaw3', 'Gyr0[degrees/s]', 'Gyr1[degrees/s]', 'Gyr2[degrees/s]', 'Mag1', 'Mag2', 'Mag3', 'Stk']
-    header = ['Time', 'Sats', 'Vel', 'V(Acc)', 'Dist']
+    header = ['Time', 'Sats', 'Vel', 'V(Acc)', 'Dist', 'StRate', 'Acc(1)', 'Acc(2)', 'Acc(3)', 'Ac3Dif', 'Yaw', 'Pitch', 'Roll', 'GyroRaw1', 'GyroRaw2', 'GyroRaw3', 'Gyr0[degrees/s]', 'Gyr1[degrees/s]', 'Gyr2[degrees/s]', 'Mag1', 'Mag2', 'Mag3', 'Stk']
+    #header = ['Time', 'Sats', 'Vel', 'V(Acc)', 'Dist']
     # Just sensor data without Logan information
     stripped_file = farr[4:-1]
     sep_num = len(header)
@@ -49,9 +51,10 @@ def read_file(fl):
         end = find_nth(line, SEP, sep_num)
         new_data.append(line[0:end].split(','))
     df = pd.DataFrame(new_data[1:], columns=new_data[0])
-    df = df.drop(['Sats', 'Vel'], axis=1)
+    df_original = df.copy(deep=True)
+    df = df.drop(['Sats', 'Vel', 'StRate', 'Acc(1)', 'Acc(2)', 'Acc(3)', 'Ac3Dif', 'Yaw', 'Pitch', 'Roll', 'GyroRaw1', 'GyroRaw2', 'GyroRaw3', 'Gyr0[degrees/s]', 'Gyr1[degrees/s]', 'Gyr2[degrees/s]', 'Mag1', 'Mag2', 'Mag3', 'Stk'], axis=1)
     df = df.astype(float)
-    return df
+    return df, df_original
 
 def generate_plot(df, start, end):
     plt.rcParams["figure.figsize"] = (15,4)
@@ -71,16 +74,15 @@ def generate_plot(df, start, end):
     return url
 
 def predict_race(f, name, racelen):
-    global start, stop, df, filename, rlen
-    df = read_file(f)
+    global start, stop, df, original, filename, rlen
+    df, original = read_file(f)
     filename = name
     try:
         start, stop = detector.get_race(df, racelen)
         rlen = racelen
     except Exception as e:
-        print('Exception')
-        print(e)
-        return render_template('index.html', 'The csv format is incorrect.')
+        traceback.print_exc()
+        return render_template('index.html', msg='Make sure you are using Logan generated .csv file.')
     result = {'start': start,
                 'end': stop,
                 'len': rlen,
@@ -137,9 +139,9 @@ def getvid():
 
 @app.route('/get_csv')
 def getcsv():
-    global df, start, stop, filename
+    global original, start, stop, filename
     fn = filename.replace('.csv', '')
-    race = df.iloc[start:stop]
+    race = original.iloc[start:stop]
     resp = make_response(race.to_csv(index=False))
     resp.headers['Content-Disposition'] = 'attachment; filename='+fn+'-race.csv'
     resp.headers['Content-Type'] = 'text/csv'

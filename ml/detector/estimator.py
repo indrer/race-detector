@@ -18,7 +18,7 @@ class RaceDetector:
         joined = self._join_predictions(possible_races)
         pred = self._find_race(df=cropped, length=rlen, preds=joined)
         pred_start = pred[0]
-        while cropped['V(Acc)'][pred_start] > 0.3:
+        while cropped['V(Acc)'][pred_start] > 0.25:
             pred_start = pred_start - 1
         dist_start = cropped['Dist'][pred_start]
         dist_end = dist_start + rlen
@@ -114,11 +114,11 @@ class RaceDetector:
         return df[:m]
 
     def load_model(self):
-        with open('ml/model/model.rd', 'rb') as f:
+        with open('ml/model/model.mod', 'rb') as f:
             return joblib.load(f)
     
     def load_scaler(self):
-        with open('ml/model/scaler.rd', 'rb') as f:
+        with open('ml/model/scaler.mod', 'rb') as f:
             return joblib.load(f)
     
     def _get_possible_races(self, predictions):
@@ -135,66 +135,3 @@ class RaceDetector:
                 races.append((start, end))
                 start = occurences[i+1]
         return races
-    
-    # returns correct prediction and start time
-    def _get_race_start(self, arr, pred, speedup_time=650):
-        # find races that fit start of the race characteristics
-        # same, but also of those races that fit end of race characteristics
-        # find local minima for start and end and return them
-        
-        # more than one race can match possible starts
-        possible_races = []
-        best_start_time = 0
-        best_end_time = 0
-        for p in pred:
-            # the kayak reaches 3.2-3.5 speed in at maximum 600 seconds
-            pred_start = p[0]
-            # get race peak start
-            peak = 0
-            if arr[pred_start] < 3.3:
-                for n in range(pred_start, pred_start+500):
-                    if (arr[n] > 3.2) and (arr[n] < 3.5):
-                        peak = n
-                        break
-            else:
-                for n in range(pred_start-500, pred_start+1):
-                    if (arr[n] > 3.2) and (arr[n] < 3.5):
-                        peak = n
-                        break
-            
-            # check if there is a dip in speed before the race start
-            for n in range(peak, peak-speedup_time-1, -1):
-                if arr[n] <= 0.4:
-                    possible_races.append(p)
-                    break
-        
-        # only one race fit the criteria, so no need to continue
-        correct_prediction = None
-        if len(possible_races) == 1:
-            correct_prediction = possible_races[0]
-        else:
-            race_time = len(arr)
-            cpred = None
-            for x in possible_races:
-                j = x[0]
-                i = j
-                while arr[i] > 2.7:
-                    i+=1
-                if race_time > (i - j):
-                    race_time = i - j
-                    cpred = x
-            correct_prediction = cpred
-        
-        # find start
-        pred_start = correct_prediction[0]
-        x = pred_start
-        while arr[x] > 0.4:
-            x-= 1
-        best_start_time = x
-
-        # find end (race is at least 40 seconds long)
-        x = pred_start + 3000
-        while arr[x] > 2.7:
-            x+= 1
-        best_end_time = x
-        return best_start_time, best_end_time
