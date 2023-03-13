@@ -18,7 +18,7 @@ class RaceDetector:
         joined = self._join_predictions(possible_races)
         pred = self._find_race(df=cropped, length=rlen, preds=joined)
         pred_start = pred[0]
-        while cropped['V(Acc)'][pred_start] > 0.25:
+        while cropped['V(Acc)'][pred_start] > 0.3:
             pred_start = pred_start - 1
         dist_start = cropped['Dist'][pred_start]
         dist_end = dist_start + rlen
